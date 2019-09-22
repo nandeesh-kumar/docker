@@ -1,0 +1,147 @@
+## Install steps: as of sep 2019
+    sudo apt-get remove docker docker-engine docker.io
+    sudo apt update
+    sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo apt-key fingerprint 0EBFCD88
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
+    sudo apt update
+    sudo apt install docker-ce
+    sudo apt-get install docker-ce-cli containerd.io
+    sudo docker version
+
+
+## make docker run by normal user:
+    sudo groupadd docker
+    sudo usermod -a -G docker nandu
+    # nandu is the user name
+
+## get docker details
+    docker info
+    docker --version
+
+## stop/start docker service:
+    service docker stop
+    service docker start
+    -- start docker service with debug log level
+    dockerd –l debug &
+
+## search image in docker hub
+    docker search <image>
+    docker search mysql
+
+## get docker image from docker hub:
+    docker pull hello-world
+    docker pull mysql
+    docker pull ubuntu
+
+## list docker images:
+    docker images  
+
+
+## check docker running process:
+    docker ps  
+    docker ps -a
+
+## run docker image
+    docker run image_name
+    docker run -it -v /root/dockershare:/root/dockershare ubuntu
+    docker run --name=dockershare -it -v /root/dockershare:/root/dockershare ubuntu
+    docker run -p 8080:8080 -p 50000:50000 jenkins 
+    docker run --name myadmin -d --link mysql:db -p 8080:80 phpmyadmin/phpmyadmin -- for more detail on link refer the steps in mysql_docker_commands
+    docker run --name ubuntu -it -v /root/dockershare:/root/dockershare ubuntu
+
+## execute command in running container
+    docker exec -it ubuntu pwd
+    docker exec -it d6ad32c7de2f top
+
+## pause/unpause docker process:
+ --  command is used to pause the processes in a running container
+    docker pause <docker-img-id>
+
+ -- command is used to unpause the processes in a running container. 
+    docker unpause <docker-img-id>
+
+## inspect docker image
+    docker inspect hello-world:latest
+
+## see all the commands that were run with an image via a container. 
+    docker history hello-world:latest
+
+## see the top processes within a container
+    docker top ContainerID 
+
+## command is used to stop a running container.
+    docker stop ContainerID 
+
+## command is used to kill the processes in a running container.
+    docker kill ContainerID
+
+## command is used to start, the stopped docker container
+    docker start ContainerID
+
+## command is used to restart, the running docker container
+    docker restart ContainerID
+
+## command is used to delete a container.
+    docker rm ContainerID
+
+## command is used to provide the statistics of a running container
+    docker stats ContainerID 
+
+## command is used to attach to a running container.
+    docker attach ContainerID
+
+## remove docker image
+    docker rmi <docker-img-id>
+    docker rmi -f <docker-img-id>  -- FORCE
+
+## save changes done to docker container
+    docker commit -m "python with MI libraries" -a "nandeesh" 7bbabf58cbde docker-python
+    docker commit -m "reated new image" -a "nandu" ecd75e760a95 nandu-ubuntu
+
+## save docker image to a file, load image file to docker
+    docker save -o /home/nandu/Downloads/docker-ubuntu-python docker-python
+    docker load -i <path to image tar file>
+
+## docker utility commads
+    -- free docker space
+    docker system prune 
+    -- check docker (image, conmatiner, etc...) size
+    docker system df
+
+## Docker – Container Lifecycle=
+    created --> running -->pause, <--unpause  paused
+                        -->stop , <--restart  stopped
+                        -->kill killed
+
+## Build your Docker File using the following instructions
+Step 1 − Create a file called Docker File
+    
+    sample File 1:
+    #This is a sample Image 
+    FROM ubuntu 
+    MAINTAINER test@gmail.com 
+    RUN apt-get update 
+    RUN apt-get install –y nginx 
+    CMD [“echo”,”Image created”] 
+
+    sample file 2:
+    FROM ubuntu 
+    RUN apt-get update 
+    RUN apt-get install –y apache2 
+    RUN apt-get install –y apache2-utils 
+    RUN apt-get clean 
+    EXPOSE 80 
+    CMD [“apache2ctl”, “-D”, “FOREGROUND”]
+
+Step 2- build docker image from file
+    docker build 
+    docker build  -t ImageName:TagName dir
+
+## web link:
+    https://docs.docker.com/engine/reference/commandline/docker/
+    https://www.tutorialspoint.com/docker/index.htm
+    https://stackoverflow.com/questions/23935141/how-to-copy-docker-images-from-one-host-to-another-without-via-repository
+    https://stackoverflow.com/questions/38118791/can-t-delete-image-with-children
+    https://medium.com/@deepakshakya/beginners-guide-to-use-docker-build-run-push-and-pull-4a132c094d75

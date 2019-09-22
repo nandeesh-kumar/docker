@@ -1,0 +1,27 @@
+## get the docker image
+    docker pull mysql
+
+## run the mysql docker image
+    docker run --name mysql -v /home/nandu/my_linux/mysql_docker_data:/var/lib/mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql
+
+    -- /home/nandu/my_linux/mysql_docker_data is any local path in host machine, all changes done in DB will be save in thos location in host
+
+## use mysql client from host to connect with docker container
+    mysql --host=127.0.0.1 --user=root --password=root
+
+    mysql --protocol=tcp --host=localhost --port=3306 --user=root --password=root --database=<database_name> 
+
+## link phpmyadmin to mysql server
+    docker pull phpmyadmin
+    docker run --name myadmin -d --link mysql:db -p 8080:80 phpmyadmin/phpmyadmin 
+
+    access the phpmyadmin page from browser http://localhost:8080/
+
+    note: if getting following error when login to phpmyadmin
+    mysqli_real_connect(): The server requested authentication method unknown to the client [caching_sha2_password]
+    then need changethe mysqlpassword 
+
+    ALTER USER root IDENTIFIED WITH mysql_native_password BY 'root';
+
+## WEB link:
+    https://hub.docker.com/_/mysql
